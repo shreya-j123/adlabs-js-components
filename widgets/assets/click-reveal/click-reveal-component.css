@@ -1,0 +1,228 @@
+wgt-click-reveal{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+  overflow: hidden;
+}
+
+wgt-click-reveal .click-reveal-wrapper{
+	height: 100%;
+}
+
+wgt-click-reveal .text-block{
+	/*position: absolute;
+	left: 0;
+	top: 0;*/
+	width: 100%;
+	height: 20%;
+	display: flex;
+	align-items: center;
+}
+
+wgt-click-reveal .instruction-block{
+	/*position: absolute;
+	left: 0;
+	bottom: 0;*/
+	width: 100%;
+	height: 20%;
+	display: flex;
+	align-items: center;
+}
+
+wgt-click-reveal .text-block div, 
+wgt-click-reveal .instruction-block div,
+wgt-click-reveal .interaction-container > div{
+	flex-grow: 1;
+}
+
+wgt-click-reveal .text-block div > *, 
+wgt-click-reveal .instruction-block div > *,
+wgt-click-reveal .interaction-container div > *{
+	margin: 0;
+}
+
+
+wgt-click-reveal .interaction-container{
+	width: 100%;
+	height: 60%;
+	display: flex;
+	align-items: center;
+}
+
+.layout{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+
+.item-block{
+	display: flex;
+  min-width: 0;
+  justify-content: center;
+  height: 100%;
+  cursor: pointer;
+}
+
+.shape{
+	width: 100%;
+	height: 100%;
+	position: relative;
+  animation: float 2s ease-in-out infinite;
+}
+
+/*shapes css start*/
+.wrapper_element{
+/*  background: yellow;*/
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.custom_image{
+  text-align: center;
+	max-width: 100%;
+}
+
+.wrapper_image{
+	max-width: 100%;
+  max-height: 100%;
+}
+
+.balloon-area,
+.bubble-container,
+.gift {
+	max-width: 80%;
+  max-height: 100%;
+	aspect-ratio: 1 / 1;
+}
+
+.cloud{
+	max-height: 50%;
+	width: 90%;
+	aspect-ratio: 1 / 1;
+}
+
+.balloon-area, .gift, .custom_image{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.balloon-svg, .gift svg{
+  width: 100%;
+  max-height: 100%;
+}
+
+.bubble-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bubble {
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), transparent),
+              radial-gradient(circle at 70% 70%, rgba(255,255,255,0.2), transparent),
+              var(--shape-color, #d43130);
+  box-shadow: 0 0 5px rgba(255,255,255,0.5) inset,
+              0 0 5px var(--shape-color, #d43130),
+              0 0 5px var(--shape-color, #d43130),
+              0 0 5px var(--shape-color, #d43130);
+}
+
+.cloud {
+  position: relative;
+}
+
+.gift {
+  position: relative;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(3px);}
+  50% { transform: translateY(-3px);}
+}
+/*shapes css end*/
+
+
+/*animation*/
+@-webkit-keyframes zoomFadeOut {
+  0% { -webkit-transform: scale(1); opacity: 1; }
+  100% { -webkit-transform: scale(0.5); opacity: 0; }
+}
+
+@keyframes zoomFadeOut {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+}
+
+wgt-click-reveal .zoom-out {
+  -webkit-animation: zoomFadeOut 0.4s ease forwards;
+  animation: zoomFadeOut 0.4s ease forwards;
+}
+
+@-webkit-keyframes FadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes FadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+wgt-click-reveal .fade-out {
+  -webkit-animation: FadeOut 0.4s ease forwards;
+  animation: FadeOut 0.4s ease forwards;
+}
+
+/*reveal animation*/
+@-webkit-keyframes RevealzoomIn {
+  100% { width : 100%; height:100%; opacity:1;}
+}
+
+@keyframes RevealzoomIn {
+  100% { width : 100%; height:100%; opacity:1;}
+}
+
+wgt-click-reveal .zoom-in, wgt-click-reveal .fade-in {
+  -webkit-animation: RevealzoomIn 0.4s ease forwards;
+  animation: RevealzoomIn 0.4s ease forwards;
+}
+/*animation*/
+
+
+/*reveal image*/
+wgt-click-reveal .reveal_element{
+  opacity: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 80%;
+  width: 10%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+wgt-click-reveal .reveal_img{
+/*  opacity: 0;*/
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  margin: auto;
+}
