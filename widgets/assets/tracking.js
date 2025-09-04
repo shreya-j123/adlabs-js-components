@@ -1,8 +1,5 @@
 const AdEventTracker = {
   __observerInitialized: false,
-  _widgetCompletionMap: new Map(),
-  // _overlayWidgetMap: new Map(),
-  // _hiddenWidgetSet: new Set(),
 
   ErrorLogger: {
     log(source, error) {
@@ -26,7 +23,7 @@ const AdEventTracker = {
     firedEvents: new Map(),
     hasEngagementFired: false,
 
-    triggerEvent({ widgetName = '', eventName = '', widgetId = '', adWidgetId = '', cumulative = false, click = false, engagement = false}) {
+    triggerEvent({ widgetName = '', eventName = '', widgetId = '', adWidgetId = '', cumulative = false, click = false, engagement = false }) {
       if (!cumulative) {
         if (!this.firedEvents.has(adWidgetId)) {
           this.firedEvents.set(adWidgetId, new Set());
@@ -45,21 +42,11 @@ const AdEventTracker = {
 
       if (engagement && !this.hasEngagementFired) {
         this.hasEngagementFired = true;
-        const engagementPayload = { ...trackerPayload, engagement_sum: 1 };
-        console.log(`[ENGAGEMENT] Fired by "${widgetName}"`, engagementPayload);
-        // AdEventTracker.FireTracker(AdEventTracker.eventTypeToUrlMap.get('event'), engagementPayload);
-      } else {
-        if (!click) {
-          console.log(`[EVENT] Fired by "${widgetName}"`, trackerPayload);
-          // AdEventTracker.FireTracker(AdEventTracker.eventTypeToUrlMap.get('event'), trackerPayload);
-        }
+        trackerPayload.engagement_sum = 1;
       }
 
-      if (click) {
-        // VservAdlabs?.notifyRenderer?.(VservAdlabsEvents?.CLICK, trackerPayload);
-        console.log(`[CLICK] Fired by "${widgetName}"`, trackerPayload);
-        // AdEventTracker.FireTracker(AdEventTracker.eventTypeToUrlMap.get('click'), trackerPayload);
-      }
+      const type = click ? 'click' : 'event';
+      console.log(`[${type.toUpperCase()}] Fired by "${widgetName}"`, trackerPayload);
     }
   },
 
@@ -135,8 +122,6 @@ window.addEventListener('DOMContentLoaded', () => {
   window.AdEventTracker = AdEventTracker;
   AdEventTracker.setupListeners();
 
-  window.addEventListener('ad-render', () => AdEventTracker.AdRender(), { once: true });
-
   // Wait for all widgets to be rendered
   (function waitForAllWidgetsInFirstDeck() {
     const container = document.querySelector('ad-frames-container');
@@ -163,12 +148,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function checkIfAllRendered() {
       if (renderedSet.size === widgets.length) {
-        document.querySelector('ad-frame-deck').classList.add("is-ready");
-        const preloader = document.querySelector('.preloader');
-        if (preloader) {
-          preloader.style.display = 'none';
-        }
-        window.dispatchEvent(new Event('ad-render'));
         console.log('All widgets in first <ad-frame-deck> are rendered');
       }
     }
