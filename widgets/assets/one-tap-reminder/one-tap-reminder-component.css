@@ -1,0 +1,95 @@
+wgt-one-tap-reminder{
+    top: 0;
+    left: 0;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+wgt-one-tap-reminder::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    opacity: 0.5;
+}
+
+wgt-one-tap-reminder.show{
+    pointer-events: auto;
+    z-index: 9999999;
+    opacity: 1;
+}
+
+wgt-one-tap-reminder .reminder-headline{
+    font-size: clamp(0.5rem, 4vw, 1.5rem);
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+    word-break: break-word;
+}
+
+wgt-one-tap-reminder .reminder-wrapper{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10vw;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    z-index: 1;
+    border-radius: 5px;
+}
+
+wgt-one-tap-reminder .reminder-wrapper .reminder-content{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+wgt-one-tap-reminder .reminder-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(0.25rem, 2vw, 0.8rem);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: clamp(32px, 12vw, 70px);
+    max-width: 25%;
+    background: transparent;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+wgt-one-tap-reminder .close_btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    z-index: 10;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    padding: 3px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+wgt-one-tap-reminder .close_btn svg {
+    width: 100%;
+    height: 100%;
+}
