@@ -1,1 +1,307 @@
-function getFrameOrientation(e){let t=document.querySelectorAll("ad-frame-deck");t.forEach(t=>{let{width:i,height:n}=t.getBoundingClientRect(),l=i/n>1.4?"orientation-landsc":"orientation-portrait";t.classList.remove("orientation-landsc","orientation-portrait"),t.classList.add(l),t.classList.add("is-ready"),adjustWidgetLayout(t,l,e)})}function setSize(e,t,i){null!=t&&(e.style.width="number"==typeof t?`${t}px`:t),null!=i&&(e.style.height="number"==typeof i?`${i}px`:i)}function isOverflowing(e,t,i){let n=e.getBoundingClientRect();if("orientation-landsc"===i){let l=t.reduce((e,t)=>{let i=window.getComputedStyle(t),n=parseFloat(i.marginLeft)||0,l=parseFloat(i.marginRight)||0;return e+t.getBoundingClientRect().width+n+l},0);return l>n.width}{let o=t.reduce((e,t)=>{let i=window.getComputedStyle(t),n=parseFloat(i.marginTop)||0,l=parseFloat(i.marginBottom)||0;return e+t.getBoundingClientRect().height+n+l},0);return o>n.height}}function forceEqualSplit(e,t,i){console.log(e),console.log(t),console.log(i);let n=e.getBoundingClientRect(),l=t.length;if("orientation-landsc"===i){let o=n.width/l;t.forEach(e=>setSize(e,o,"100%"))}else{let a=n.height/l;console.log(a),t.forEach(e=>setSize(e,"100%",a))}}function onVideoReady(e,t){e&&(e.readyState>=1?requestAnimationFrame(t):e.addEventListener("loadedmetadata",()=>{requestAnimationFrame(t)},{once:!0}))}function adjustWidgetLayout(e,t,i=[]){let n=Array.from(e.children).filter(e=>e.tagName.startsWith("WGT-")),l=n.filter(e=>!i.includes(e.tagName)),o=l.filter(e=>"WGT-VIDEO-PLAYER"===e.tagName),a=l.filter(e=>"WGT-INFO"===e.tagName),r=l.length,d=e.getBoundingClientRect();if(1===l.length){setSize(l[0],"100%","100%");return}if(1===o.length){let g=o[0],h=g.querySelector("video"),s=l.filter(e=>e!==g),$=a.length?a[0]:null,c=$?s.filter(e=>e!==$):s,u=()=>{let e=h.videoWidth,i=h.videoHeight;if("orientation-landsc"===t){let n=d.height*(e/i);setSize(g,n=Math.max(n=Math.min(n,.6*d.width),50),"100%");let l=d.width-n;r>2&&$&&(setSize($,"auto","100%"),l-=$.getBoundingClientRect().width);let o=l/c.length;c.forEach(e=>setSize(e,o,"100%"))}else{let a=h.videoHeight,s=h.videoWidth,u=d.width/(s/a);setSize(g,"100%",u=Math.min(u,.5*d.height));let f=d.height-u;if(r>2&&$){setSize($,"100%","auto"),requestAnimationFrame(()=>{let e=$.getBoundingClientRect().height;f-=e;let t=f/c.length;c.forEach(e=>setSize(e,"100%",t))});return}let m=f/c.length;c.forEach(e=>setSize(e,"100%",m))}};onVideoReady(h,()=>{u(),isOverflowing(e,l,t)&&forceEqualSplit(e,l,t)})}else if(o.length>0&&l.every(e=>"WGT-VIDEO-PLAYER"===e.tagName||"WGT-INFO"===e.tagName)){let f=a,m=o.length+f.length;if("orientation-landsc"===t){let S=[],E=[];o.forEach(e=>{let t=e.querySelector("video"),i=()=>{let i=t.videoWidth,n=t.videoHeight;if(n>i){let l=Math.max(d.height*(i/n),50);setSize(e,l,"100%"),S.push(e)}else E.push(e);if(S.length+E.length===o.length){let a=S.reduce((e,t)=>e+t.getBoundingClientRect().width,0),r=d.width-a,g=[...E,...f],h=r/g.length;g.forEach(e=>setSize(e,h,"100%"))}};onVideoReady(t,i)})}else{let _=d.height/m;l.forEach(e=>setSize(e,"100%",_))}}else{let z=a.length?a[0]:null,y=z?l.filter(e=>e!==z):l,R=new Set(y);if("orientation-landsc"===t){let v=0;o.forEach(e=>{let t=e.querySelector("video"),i=()=>{let i=t.videoWidth,n=t.videoHeight;if(n>i){let l=Math.max(d.height*(i/n),50);setSize(e,l,"100%"),v+=l,R.delete(e)}};onVideoReady(t,i)}),z&&(setSize(z,"auto","100%"),v+=z.getBoundingClientRect().width,R.delete(z));let w=d.width-v,C=w/R.size;R.forEach(e=>setSize(e,C,"100%"))}else if(z){setSize(z,"100%","auto");let W=z.getBoundingClientRect().height,T=d.height-W,p=T/y.length;y.forEach(e=>setSize(e,"100%",p))}else{let B=100/l.length;l.forEach(e=>setSize(e,"100%",`${B}%`))}}}(wow=new WOW({boxClass:"wow",animateClass:"animated",offset:0,mobile:!0,live:!0})).init(),excludedWidgetTags=["WGT-SCRATCH-CARD","WGT-PEEL","WGT-ONE-TAP-REMINDER"],window.addEventListener("load",()=>{getFrameOrientation(excludedWidgetTags),AdEventTracker?.initVisibilityObserver?.()});let resizeTimer;window.addEventListener("resize",()=>{clearTimeout(resizeTimer),resizeTimer=setTimeout(()=>{getFrameOrientation(excludedWidgetTags)},150)}),window.initDeck=function(){console.log("[frame-deck] initDeck() called");let e=document.querySelector("ad-frame-deck");if(!e){console.warn("No ad-frame-deck found in iframe");return}e.layout=()=>{console.log("[ad-frame-deck] manual layout triggered"),getFrameOrientation(excludedWidgetTags)},e.layout()};
+if (typeof WOW !== 'undefined') {
+wow = new WOW({
+  boxClass:     'wow',      // default
+  animateClass: 'animated', // default
+  offset:       0,          // default
+  mobile:       true,       // default
+  live:         true        // default
+});
+wow.init();
+}
+
+function getFrameOrientation(excludedWidgetTags) {
+  const decks = document.querySelectorAll('ad-frame-deck');
+
+  decks.forEach(deck => {
+    const { width, height } = deck.getBoundingClientRect();
+    const orientation = width / height > 1.4 ? 'orientation-landsc' : 'orientation-portrait';
+
+    deck.classList.remove('orientation-landsc', 'orientation-portrait');
+    deck.classList.add(orientation);
+
+    adjustWidgetLayout(deck, orientation, excludedWidgetTags);
+  });
+}
+
+// Utility: Set width/height
+function setSize(el, width, height) {
+  if (width != null) el.style.width = typeof width === 'number' ? `${width}px` : width;
+  if (height != null) el.style.height = typeof height === 'number' ? `${height}px` : height;
+}
+
+function isOverflowing(deck, widgets, orientation) {
+  const deckRect = deck.getBoundingClientRect();
+
+  if (orientation === 'orientation-landsc') {
+    const totalWidth = widgets.reduce((sum, w) => {
+      const style = window.getComputedStyle(w);
+      const marginLeft = parseFloat(style.marginLeft) || 0;
+      const marginRight = parseFloat(style.marginRight) || 0;
+      return sum + w.getBoundingClientRect().width + marginLeft + marginRight;
+    }, 0);
+
+    return totalWidth > deckRect.width;
+
+  } else {
+    const totalHeight = widgets.reduce((sum, w) => {
+      const style = window.getComputedStyle(w);
+      const marginTop = parseFloat(style.marginTop) || 0;
+      const marginBottom = parseFloat(style.marginBottom) || 0;
+      return sum + w.getBoundingClientRect().height + marginTop + marginBottom;
+    }, 0);
+
+    return totalHeight > deckRect.height;
+  }
+}
+
+function forceEqualSplit(deck, widgets, orientation) {
+  console.log(deck);
+  console.log(widgets);
+  console.log(orientation);
+  const deckRect = deck.getBoundingClientRect();
+  const count = widgets.length;
+
+  if (orientation === 'orientation-landsc') {
+    const eachWidth = deckRect.width / count;
+    widgets.forEach(w => setSize(w, eachWidth, '100%'));
+  } else {
+    const eachHeight = deckRect.height / count;
+    console.log(eachHeight);
+    widgets.forEach(w => setSize(w, '100%', eachHeight));
+  }
+}
+
+// Utility: Handle loadedmetadata
+function onVideoReady(videoEl, callback) {
+  if (!videoEl) return;
+  if (videoEl.readyState >= 1) {
+    requestAnimationFrame(callback);
+  } else {
+    videoEl.addEventListener('loadedmetadata', () => {
+      requestAnimationFrame(callback);
+    }, { once: true });
+  }
+}
+
+function adjustWidgetLayout(deck, orientation, excludedWidgetTags = []) {
+  const allWidgets = Array.from(deck.children).filter(el => el.tagName.startsWith('WGT-'));
+
+  const widgets = allWidgets.filter(
+    el => !excludedWidgetTags.includes(el.tagName)
+  );
+
+  const videoWidgets = widgets.filter(w => w.tagName === 'WGT-VIDEO-PLAYER');
+  const infoWidgets = widgets.filter(w => w.tagName === 'WGT-INFO');
+  const count = widgets.length;
+  const deckRect = deck.getBoundingClientRect();
+
+  if (widgets.length === 1) {
+    setSize(widgets[0], '100%', '100%');
+    return;
+  }
+
+  if (videoWidgets.length === 1) {
+    const video = videoWidgets[0];
+    const internalVideo = video.querySelector('video');
+    const otherWidgets = widgets.filter(w => w !== video);
+    const info = infoWidgets.length ? infoWidgets[0] : null;
+    const otherNonInfoWidgets = info ? otherWidgets.filter(w => w !== info) : otherWidgets;
+
+    const layoutWithOriginalSize = () => {
+      const vw = internalVideo.videoWidth;
+      const vh = internalVideo.videoHeight;
+      const isLandscape = vw > vh;
+      const aspectRatio = vw / vh;
+
+      if (orientation === 'orientation-landsc') {
+        let videoWidth = deckRect.height * aspectRatio;
+        videoWidth = Math.min(videoWidth, deckRect.width * 0.6);
+        videoWidth = Math.max(videoWidth, 50);
+
+        setSize(video, videoWidth, '100%');
+
+        let remainingWidth = deckRect.width - videoWidth;
+
+        if (count > 2 && info) {
+          setSize(info, 'auto', '100%');
+          remainingWidth -= info.getBoundingClientRect().width;
+        }
+
+        const eachWidth = remainingWidth / otherNonInfoWidgets.length;
+        otherNonInfoWidgets.forEach(widget => setSize(widget, eachWidth, '100%'));
+      } else {
+        const isVertical = !isLandscape;
+        // setSize(video, '100%', isVertical ? '50%' : 'auto');
+        // const videoHeight = video.getBoundingClientRect().height;
+
+        const vh = internalVideo.videoHeight;
+        const vw = internalVideo.videoWidth;
+        const aspectRatio = vw / vh;
+        let videoHeight = deckRect.width / aspectRatio;
+
+        // Limit height to half if needed
+        videoHeight = Math.min(videoHeight, deckRect.height * 0.5);
+        setSize(video, '100%', videoHeight);
+
+        let remainingHeight = deckRect.height - videoHeight;
+
+        if (count > 2 && info) {
+          setSize(info, '100%', 'auto');
+          // remainingHeight -= info.getBoundingClientRect().height;
+          // Use requestAnimationFrame to allow layout to complete before measuring
+          requestAnimationFrame(() => {
+            const infoHeight = info.getBoundingClientRect().height;
+            remainingHeight -= infoHeight;
+
+            const eachHeight = remainingHeight / otherNonInfoWidgets.length;
+            otherNonInfoWidgets.forEach(widget => setSize(widget, '100%', eachHeight));
+          });
+          return; // prevent setting `eachHeight` again below
+        }
+
+        const eachHeight = remainingHeight / otherNonInfoWidgets.length;
+        otherNonInfoWidgets.forEach(widget => setSize(widget, '100%', eachHeight));
+      }
+    };
+
+    onVideoReady(internalVideo, () => {
+      layoutWithOriginalSize();
+      if (isOverflowing(deck, widgets, orientation)) {
+        forceEqualSplit(deck, widgets, orientation);
+      }
+    });
+  }
+
+  else if (
+    videoWidgets.length > 0 &&
+    widgets.every(w => w.tagName === 'WGT-VIDEO-PLAYER' || w.tagName === 'WGT-INFO')
+  ) {
+    const info = infoWidgets;
+    const totalWidgets = videoWidgets.length + info.length;
+
+    if (orientation === 'orientation-landsc') {
+      let verticalVideos = [];
+      let horizontalVideos = [];
+
+      videoWidgets.forEach(video => {
+        const internalVideo = video.querySelector('video');
+
+        const handleVideoLayout = () => {
+          const vw = internalVideo.videoWidth;
+          const vh = internalVideo.videoHeight;
+
+          if (vh > vw) {
+            // Vertical video
+            const width = Math.max(deckRect.height * (vw / vh), 50);
+            setSize(video, width, '100%');
+            verticalVideos.push(video);
+          } else {
+            horizontalVideos.push(video);
+          }
+
+          if (verticalVideos.length + horizontalVideos.length === videoWidgets.length) {
+            const usedWidth = verticalVideos.reduce((sum, el) => {
+              return sum + el.getBoundingClientRect().width;
+            }, 0);
+
+            const remainingWidth = deckRect.width - usedWidth;
+            const sharedWidgets = [...horizontalVideos, ...info];
+            const eachWidth = remainingWidth / sharedWidgets.length;
+
+            sharedWidgets.forEach(widget => setSize(widget, eachWidth, '100%'));
+          }
+        };
+
+        onVideoReady(internalVideo, handleVideoLayout);
+      });
+    } else {
+      const eachHeight = deckRect.height / totalWidgets;
+      widgets.forEach(widget => setSize(widget, '100%', eachHeight));
+    }
+  }
+
+  else {
+    const info = infoWidgets.length ? infoWidgets[0] : null;
+    const otherWidgets = info ? widgets.filter(w => w !== info) : widgets;
+    const remainingWidgets = new Set(otherWidgets);
+
+    if (orientation === 'orientation-landsc') {
+      let totalVideoWidth = 0;
+
+      videoWidgets.forEach(video => {
+        const internalVideo = video.querySelector('video');
+
+        const applyVideoLayout = () => {
+          const vw = internalVideo.videoWidth;
+          const vh = internalVideo.videoHeight;
+          const isVertical = vh > vw;
+
+          if (isVertical) {
+            const width = Math.max(deckRect.height * (vw / vh), 50);
+            setSize(video, width, '100%');
+            totalVideoWidth += width;
+            remainingWidgets.delete(video);
+          }
+        };
+
+        onVideoReady(internalVideo, applyVideoLayout);
+      });
+
+      if (info) {
+        setSize(info, 'auto', '100%');
+        totalVideoWidth += info.getBoundingClientRect().width;
+        remainingWidgets.delete(info);
+      }
+
+      const remainingWidth = deckRect.width - totalVideoWidth;
+      const eachWidth = remainingWidth / remainingWidgets.size;
+
+      remainingWidgets.forEach(widget => setSize(widget, eachWidth, '100%'));
+    } else {
+      if (info) {
+        setSize(info, '100%', 'auto');
+        const infoHeight = info.getBoundingClientRect().height;
+        const remainingHeight = deckRect.height - infoHeight;
+        const eachHeight = remainingHeight / otherWidgets.length;
+
+        otherWidgets.forEach(widget => setSize(widget, '100%', eachHeight));
+      } else {
+        const eachHeight = 100 / widgets.length;
+        widgets.forEach(widget => setSize(widget, '100%', `${eachHeight}%`));
+      }
+    }
+  }
+}
+
+excludedWidgetTags = ['WGT-SCRATCH-CARD', 'WGT-PEEL', 'WGT-ONE-TAP-REMINDER'];
+
+window.addEventListener('load', () => {
+  getFrameOrientation(excludedWidgetTags);
+  AdEventTracker?.initVisibilityObserver?.();
+});
+
+// window.addEventListener('resize', getFrameOrientation(excludedWidgetTags));
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    getFrameOrientation(excludedWidgetTags);
+  }, 150); // Adjust delay as needed (e.g., 100ms to 250ms)
+});
+
+window.initDeck = function () {
+  console.log('[frame-deck] initDeck() called');
+
+  const deck = document.querySelector('ad-frame-deck');
+  if (!deck) {
+    console.warn('No ad-frame-deck found in iframe');
+    return;
+  }
+
+  deck.layout = () => {
+    console.log('[ad-frame-deck] manual layout triggered');
+    getFrameOrientation(excludedWidgetTags);
+  };
+
+  deck.layout();
+};

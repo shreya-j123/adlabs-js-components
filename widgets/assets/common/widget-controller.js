@@ -1,1 +1,119 @@
-let deck=null;function getDeck(){return deck||(deck=document.querySelector("ad-frame-deck")),deck}const WidgetController={_overlayWidgetMap:new Map,_protectedTargets:new Set,handlePlay(e){let t=e._widgetOrder;if(!t)return;let r=WidgetController._overlayWidgetMap.get(t);if(r&&(r.completed+=1,r.completed>=r.total)){if("1"===e._overlayOn){let l=getDeck();if(!l)return;WidgetController._protectedTargets.clear(),l.querySelectorAll('wgt-peel[mode="2"], wgt-scratch-card[mode="2"]').forEach(e=>{console.log("Protected widget:",e);let t=e.getAttribute("reveal_widget"),r=t&&document.querySelector(`[order="${t}"]`);r?.tagName.startsWith("WGT-")&&WidgetController._protectedTargets.add(r)}),l.querySelectorAll("*").forEach(e=>{!e.tagName.startsWith("WGT-")||WidgetController._protectedTargets.has(e)||e.closest("widget-wrapper")||e.setAttribute("paused","false")})}else e._target?.tagName.startsWith("WGT-")&&e._target.setAttribute("paused","false");WidgetController._overlayWidgetMap.delete(t)}},waitForTargetAndInit(e,t){let r=e._overlayOn,l=e.getAttribute("reveal_widget"),a=()=>{let a;if("1"===r){let o=getDeck()||document.body;o?.querySelectorAll("*").forEach(e=>{!e.closest("widget-wrapper")&&e.tagName.startsWith("WGT-")&&e.setAttribute("paused","true")}),a=o}else l&&((a=document.querySelector(`[order="${l}"]`))&&a.tagName.startsWith("WGT-")?a.setAttribute("paused","true"):a=null);a&&(e._observer?.disconnect(),t.call(e,a))};a(),e._observer=new MutationObserver(a),e._observer.observe(document.body,{childList:!0,subtree:!0})}};window.WidgetController=WidgetController;
+let deck = null;
+function getDeck() {
+  if (!deck) {
+    deck = document.querySelector('ad-frame-deck');
+  }
+  return deck;
+}
+
+const WidgetController = {
+  _overlayWidgetMap: new Map(),
+  // _hiddenWidgetSet: new Set(),
+  _protectedTargets: new Set(),
+
+  handlePlay(widget) {
+    const selector = 'wgt-peel[mode="2"], wgt-scratch-card[mode="2"]';
+    const order = widget._widgetOrder;
+    if (!order) return;
+
+    const info = WidgetController._overlayWidgetMap.get(order);
+    if (!info) return;
+
+    info.completed += 1;
+
+    if (info.completed >= info.total) {
+      if (widget._overlayOn === '1') {
+        const deck = getDeck();
+        if (!deck) return;
+
+        // Reset protectedTargets for this run
+        WidgetController._protectedTargets.clear();
+
+        // Collect protected widgets
+        deck.querySelectorAll(selector).forEach(card => {
+            console.log('Protected widget:', card);
+          const targetOrder = card.getAttribute('reveal_widget');
+          const targetWidget = targetOrder && document.querySelector(`[order="${targetOrder}"]`);
+          if (targetWidget?.tagName.startsWith('WGT-')) {
+            WidgetController._protectedTargets.add(targetWidget);
+          }
+        });
+
+        // Resume all unprotected widgets
+        deck.querySelectorAll('*').forEach(wgt => {
+          if (wgt.tagName.startsWith('WGT-') && !WidgetController._protectedTargets.has(wgt)) {
+            // console.log(!WidgetController._overlayWidgetMap.has(wgt));
+
+            if (wgt.closest('widget-wrapper')) return;
+            wgt.setAttribute('paused', 'false');
+          }
+        });
+      } else if (widget._target?.tagName.startsWith('WGT-')) {
+        widget._target.setAttribute('paused', 'false');
+      }
+
+      // Clean up
+      WidgetController._overlayWidgetMap.delete(order);
+    }
+  },
+
+  waitForTargetAndInit(widget, prepareFn) {
+    const mode = widget._overlayOn;
+    const targetOrderValue = widget.getAttribute('reveal_widget');
+
+    const tryInit = () => {
+      let target;
+      if (mode === '1') {
+        const deck = getDeck() || document.body;
+        deck?.querySelectorAll('*').forEach(wgt => {
+          if (wgt.closest('widget-wrapper')) return;
+          if (wgt.tagName.startsWith('WGT-')) {
+            wgt.setAttribute('paused', 'true');
+          }
+        });
+        target = deck;
+      } else if (targetOrderValue) {
+        target = document.querySelector(`[order="${targetOrderValue}"]`);
+        if (target && target.tagName.startsWith('WGT-')) {
+          target.setAttribute('paused', 'true');
+        } else {
+          target = null;
+        }
+      }
+
+      if (target) {
+        widget._observer?.disconnect();
+        prepareFn.call(widget, target); // call correct prepare method
+      }
+    };
+
+    tryInit();
+
+    widget._observer = new MutationObserver(tryInit);
+    widget._observer.observe(document.body, { childList: true, subtree: true });
+  },
+
+  // function to add image rendition
+  applyImageScaling(el, mode) {
+
+    // Clear old scaling classes
+    el.classList.remove("img-crop-fill", "img-scale-fit", "img-stretch-fill");
+
+    switch (parseInt(mode, 10)) {
+      case 2: // Crop to Fill
+        el.classList.add("img-crop-fill");
+        break;
+
+      case 3: // Stretch to Fill
+        el.classList.add("img-stretch-fill");
+        break;
+
+      case 1: // Scale to Fit (default)
+      default:
+        el.classList.add("img-scale-fit");
+        break;
+    }
+  }
+};
+
+window.WidgetController = WidgetController;

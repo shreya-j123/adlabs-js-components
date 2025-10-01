@@ -1,1 +1,177 @@
-.wgt-grid-wrapper,wgt-grid{position: relative;width:100%;height:100%;box-sizing:border-box}.grid-item img,.wgt-logo{max-height:100%;object-fit:contain}.grid-content,.title,.wgt-cta{text-decoration:none}.grid-container,.grid-item,.title,.wgt-ctaWrapper,.wgt-grid-wrapper,.wgt-header,wgt-grid{box-sizing:border-box}wgt-grid{display:block}.wgt-grid-wrapper{background-color:inherit;padding:10px}.wgt-header{display:flex;align-items:center;gap:12px}.wgt-header h1{font-size:14px;margin:0}.wgt-logo{height:40px}.grid-container{display:grid;width:100%;height:100%;gap:5px;overflow:hidden;align-items:center}.grid-content,.grid-item{display:flex;height:100%;overflow:hidden;width:100%}.grid-item{flex-direction:column;justify-content:center;align-items:center}.grid-itemChild{overflow:hidden}.grid-item img{max-width:100%;min-width:50%;min-height:50%;height:auto;display:block}.grid-content{align-items:center;justify-content:stretch;flex-direction:column;gap:2px}.title{min-height:20%;width:100%;padding:0 4px}.wgt-cta{padding:5px 0;border:none;border-radius:6px;font-size:clamp(10px, 1.8vw, 14px);font-weight:700;display:inline-block}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes rotateIn{from{transform:rotate(-180deg);opacity:0}to{transform:rotate(0);opacity:1}}@keyframes zoomIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}@keyframes slideUp{from{transform:translateY(50%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideDown{from{transform:translateY(-50%);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes slideLeft{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes slideRight{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes flipInY{0%{transform:perspective(400px) rotateY(90deg);opacity:0}100%{transform:perspective(400px) rotateY(0);opacity:1}}@keyframes flipInX{0%{transform:perspective(400px) rotateX(90deg);opacity:0}100%{transform:perspective(400px) rotateX(0);opacity:1}}@keyframes skewIn{0%{transform:skewX(-20deg);opacity:0}100%{transform:skewX(0);opacity:1}}.animate-fadeIn{animation:.6s ease-in-out fadeIn}.animate-fadeUp{animation:.6s ease-in-out fadeUp}.animate-rotate{animation:.6s ease-in-out rotateIn}.animate-zoomIn{animation:.6s ease-in-out zoomIn}.animate-slideUp{animation:.6s ease-in-out slideUp}.animate-slideDown{animation:.6s ease-in-out slideDown}.animate-slideLeft{animation:.5s forwards slideLeft}.animate-slideRight{animation:.5s forwards slideRight}.animate-flipInY{animation:.5s forwards flipInY}.animate-flipInX{animation:.5s forwards flipInX}.animate-skewIn{animation:.5s forwards skewIn}
+wgt-grid {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.wgt-grid-wrapper {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: inherit;
+  padding: 10px;
+}
+
+.wgt-header {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wgt-header h1 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.wgt-logo {
+  height: 40px;
+  object-fit: contain;
+  max-height: 100%;
+}
+
+.grid-container {
+  box-sizing: border-box;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 5px;
+  overflow: hidden;
+  align-items:center;
+/*  padding: 5px 0;*/
+}
+
+.grid-item {
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.grid-itemChild{
+  overflow: hidden;
+}
+
+.grid-item img {
+  max-width: 100%;
+  max-height: 100%;
+  min-width: 50%;
+  min-height: 50%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.grid-content {
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  flex-direction: column; /* default, overridden inline if needed */
+  width: 100%;
+  height: 100%;
+  gap: 2px;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.title {
+  text-decoration: none;
+  min-height: 20%;
+  width: 100%;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.wgt-cta {
+  padding: 5px 0;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.wgt-ctaWrapper{
+  box-sizing: border-box;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes rotateIn {
+  from { transform: rotate(-180deg); opacity: 0; }
+  to { transform: rotate(0); opacity: 1; }
+}
+@keyframes zoomIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes slideUp {
+  from { transform: translateY(50%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideDown {
+  from { transform: translateY(-50%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideLeft {
+  from { transform: translateX(-30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes flipInY {
+  0% { transform: perspective(400px) rotateY(90deg); opacity: 0; }
+  100% { transform: perspective(400px) rotateY(0deg); opacity: 1; }
+}
+
+@keyframes flipInX {
+  0% { transform: perspective(400px) rotateX(90deg); opacity: 0; }
+  100% { transform: perspective(400px) rotateX(0deg); opacity: 1; }
+}
+
+@keyframes skewIn {
+  0% { transform: skewX(-20deg); opacity: 0; }
+  100% { transform: skewX(0); opacity: 1; }
+}
+
+
+/* Animation classes */
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.animate-fadeUp {
+  animation: fadeUp 0.6s ease-in-out;
+}
+
+.animate-rotate {
+  animation: rotateIn 0.6s ease-in-out;
+}
+.animate-zoomIn {
+  animation: zoomIn 0.6s ease-in-out;
+}
+.animate-slideUp {
+  animation: slideUp 0.6s ease-in-out;
+}
+.animate-slideDown {
+  animation: slideDown 0.6s ease-in-out;
+}
+.animate-slideLeft   { animation: slideLeft 0.5s ease forwards; }
+.animate-slideRight  { animation: slideRight 0.5s ease forwards; }
+
+.animate-flipInY  { animation: flipInY 0.5s ease forwards; }
+.animate-flipInX  { animation: flipInX 0.5s ease forwards; }
+.animate-skewIn  { animation: skewIn 0.5s ease forwards; }
