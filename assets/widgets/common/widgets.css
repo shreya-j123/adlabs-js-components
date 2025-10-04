@@ -1,0 +1,3 @@
+.img-crop-fill { background-size: cover; background-position: center;} /* Crop to Fill */
+.img-scale-fit { background-size: contain; background-position: center;} /* Scale to Fit */
+.img-stretch-fill { background-size: 100% 100%; background-position: center;} /* Stretch to Fill */
